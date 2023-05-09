@@ -30,6 +30,7 @@ final class Tools
 
         if ($_ENV['maxmind_license_key'] === '') {
             $err_msg = 'GeoIP2 服务未配置';
+            return 'GeoIP2 服务未配置';
         } else {
             $geoip = new GeoIP2();
         }
