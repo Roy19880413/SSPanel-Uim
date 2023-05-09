@@ -236,14 +236,31 @@ final class SubController extends BaseController
                     $udp = $node_custom_config['udp'] ?? true;
                     // Clash.Meta
                     $client_fingerprint = $node_custom_config['client_fingerprint'] ?? '';
+                    
+                    $port = null;
+                    if (! array_key_exists('offset_port_user', $node_custom_config)) {
+                       $port = $user->port;
+                    } else {
+                       $port = $node_custom_config['offset_port_user'];
+                    }
 
+                    $cipher = null;
+                    if (! array_key_exists('mu_encryption', $node_custom_config)) {
+                       $cipher = $user->method;
+                    } else {
+                       $cipher = $node_custom_config['mu_encryption'];
+                    }
+
+
+                    
+                    
                     $node = [
                         'name' => $node_raw->name,
                         'type' => 'ss',
                         'server' => $server,
-                        'port' => (int) $user->port,
+                        'port' => (int) $port,
                         'password' => $user->passwd,
-                        'cipher' => $user->method,
+                        'cipher' => $cipher,
                         'udp' => $udp,
                         'client-fingerprint' => $client_fingerprint,
                         'plugin' => $plugin,
