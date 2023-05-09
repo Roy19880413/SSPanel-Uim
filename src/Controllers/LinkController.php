@@ -116,6 +116,7 @@ final class LinkController extends BaseController
             ->where(static function ($query): void {
                 $query->where('node_bandwidth_limit', '=', 0)->orWhereRaw('node_bandwidth < node_bandwidth_limit');
             })
+            ->orderBy('name')
             ->get();
 
         foreach ($nodes_raw as $node_raw) {
@@ -126,8 +127,22 @@ final class LinkController extends BaseController
             } else {
                 $server = $node_custom_config['server_user'];
             }
+            $port = null;
+            if (! array_key_exists('offset_port_user', $node_custom_config)) {
+                $port = $user->port;
+            } else {
+                $port = $node_custom_config['offset_port_user'];
+            }
+
+            $cipher = null;
+            if (! array_key_exists('mu_encryption', $node_custom_config)) {
+                  $cipher = $user->method;
+            } else {
+                  $cipher = $node_custom_config['mu_encryption'];
+            }
+
             if ((int) $node_raw->sort === 0) {
-                $links .= base64_encode($user->method . ':' . $user->passwd . '@' . $server . ':' . $user->port) . '#' .
+                $links .= base64_encode($cipher . ':' . $user->passwd . '@' . $server . ':' . $port) . '#' .
                     $node_raw->name . PHP_EOL;
             }
         }
